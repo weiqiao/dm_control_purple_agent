@@ -1,6 +1,10 @@
-# A2A Agent Template
+# DMC Purple Agent (Baseline)
 
-A minimal template for building [A2A (Agent-to-Agent)](https://a2a-protocol.org/latest/) agents.
+This is a **baseline purple agent** built from the A2A agent template. It is intended to be
+evaluated by the green DMC evaluator agent from `dmc-green-evaluator-template.zip`.
+
+The agent implements a minimal DMC step protocol and outputs **random continuous actions**
+within the provided action bounds.
 
 ## Project Structure
 
@@ -18,6 +22,49 @@ pyproject.toml    # Python dependencies
 └─ workflows/
    └─ test-and-publish.yml # CI workflow
 ```
+
+## DMC Evaluator Protocol
+
+The green evaluator will send JSON messages. Your agent should respond with a JSON string.
+
+### Init message (optional)
+
+```json
+{
+  "kind": "dmc_init",
+  "task": "walker_walk",
+  "seed": 0,
+  "action_spec": {"shape": [6], "minimum": [-1, ...], "maximum": [1, ...]},
+  "observation_spec": {"...": "..."}
+}
+```
+
+This baseline agent replies with `{ "ok": true }` and stores the action spec for the current
+conversation.
+
+### Step message
+
+```json
+{
+  "kind": "dmc_step",
+  "task": "walker_walk",
+  "episode": 0,
+  "t": 0,
+  "observation": {"...": "..."},
+  "reward": 0.0,
+  "discount": 1.0,
+  "step_type": "StepType.FIRST",
+  "action_spec": {"shape": [6], "minimum": [-1, ...], "maximum": [1, ...]}
+}
+```
+
+Your agent must respond with:
+
+```json
+{ "action": [ ... ] }
+```
+
+The evaluator will clip actions to the declared bounds.
 
 ## Getting Started
 

@@ -23,17 +23,24 @@ def main():
     # Fill in your agent card
     # See: https://a2a-protocol.org/latest/tutorials/python/3-agent-skills-and-card/
     
+    # A single skill is enough for A2A conformance tests and for the DMC evaluator
+    # to discover what this agent does.
     skill = AgentSkill(
-        id="",
-        name="",
-        description="",
-        tags=[],
-        examples=[]
+        id="dmc_control",
+        name="DMC Control (Baseline)",
+        description=(
+            "Responds to DeepMind Control Suite evaluator messages (dmc_init/dmc_step) "
+            "with JSON actions matching the provided action_spec."
+        ),
+        tags=["dm_control", "reinforcement-learning", "baseline"],
+        examples=[
+            "{\"kind\": \"dmc_step\", \"action_spec\": {\"shape\": [2], \"minimum\": [-1, -1], \"maximum\": [1, 1]}}",
+        ],
     )
 
     agent_card = AgentCard(
-        name="",
-        description="",
+        name="DMC Purple Agent (Baseline)",
+        description="A minimal baseline agent that outputs random continuous actions for DMC tasks.",
         url=args.card_url or f"http://{args.host}:{args.port}/",
         version='1.0.0',
         default_input_modes=['text'],
